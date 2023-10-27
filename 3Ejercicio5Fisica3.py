@@ -29,6 +29,9 @@ class CalculadoraElectrica:
         if num_dispositivos < 1 or num_dispositivos > 10:
             ttk.Label(self.root, text="Número inválido. Por favor ingrese un número entre 1 y 10.").grid(row=1, column=0, columnspan=6, padx=10, pady=10)
             return
+        
+        # Lista de electrodomésticos
+        electrodomesticos = ["Refrigerador", "Televisor", "Lavadora", "Aire acondicionado", "Horno de microondas", "Computadora", "Licuadora", "Plancha", "Secadora de ropa", "Cafetera", "Lámpara", "Ventilador", "Cargador de teléfono", "Horno eléctrico", "Aspiradora", "Tostadora", "Batidora", "Calentador de agua", "Estufa eléctrica", "Impresora"]
 
         # Etiquetas para las columnas
         ttk.Label(self.root, text="Dispositivo").grid(row=1, column=0, padx=5, pady=5)
@@ -41,7 +44,7 @@ class CalculadoraElectrica:
         self.dispositivos = []
         for i in range(num_dispositivos):
             dispositivo_var = tk.StringVar()
-            dispositivo_combobox = ttk.Combobox(self.root, textvariable=dispositivo_var, values=[f"Dispositivo {j+1}" for j in range(20)])
+            dispositivo_combobox = ttk.Combobox(self.root, textvariable=dispositivo_var, values=electrodomesticos)
             dispositivo_combobox.grid(row=i+2, column=0, padx=10, pady=10)
 
             potencia_var = tk.DoubleVar()
