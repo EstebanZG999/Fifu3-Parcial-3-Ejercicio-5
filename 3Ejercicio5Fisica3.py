@@ -75,14 +75,17 @@ class CalculadoraElectrica:
         ttk.Button(self.root, text="Calcular", command=self.calcular).grid(row=num_dispositivos+2, column=0, columnspan=6, pady=20)
 
         # Etiquetas para mostrar los resultados
+        self.resultado_tipo_tarifa_label = ttk.Label(self.root, text="")
+        self.resultado_tipo_tarifa_label.grid(row=num_dispositivos+3, column=0, columnspan=6, padx=10, pady=10)
+
         self.resultado_corriente_label = ttk.Label(self.root, text="")
-        self.resultado_corriente_label.grid(row=num_dispositivos+3, column=0, columnspan=6, pady=10)
+        self.resultado_corriente_label.grid(row=num_dispositivos+4, column=0, columnspan=6, pady=10)
 
         self.resultado_energia_label = ttk.Label(self.root, text="")
-        self.resultado_energia_label.grid(row=num_dispositivos+4, column=0, columnspan=6, pady=10)
+        self.resultado_energia_label.grid(row=num_dispositivos+5, column=0, columnspan=6, pady=10)
 
         self.resultado_diametro_label = ttk.Label(self.root, text="")
-        self.resultado_diametro_label.grid(row=num_dispositivos+5, column=0, columnspan=6, pady=10)
+        self.resultado_diametro_label.grid(row=num_dispositivos+6, column=0, columnspan=6, pady=10)
 
     def calcular(self):
         corriente_total = 0
@@ -105,7 +108,7 @@ class CalculadoraElectrica:
                 energia_total += energia
                 largo_cable_total += largo_cable
 
-        costo_energia = energia_total * 0.13  # Suponiendo un costo de 0.13 USD por kWh
+        costo_energia = energia_total * 1.386  # Costo de 1.386 Q por kWh
 
         # Calcular diámetro mínimo del cable (usando la fórmula de la caída de voltaje)
         resistividad_cobre = 1.68e-8  # ohm*m
@@ -115,8 +118,10 @@ class CalculadoraElectrica:
 
         # Mostrar resultados
         self.resultado_corriente_label.config(text=f"Corriente Total: {corriente_total:.2f} A")
-        self.resultado_energia_label.config(text=f"Costo de Energía: ${costo_energia:.2f}")
+        self.resultado_energia_label.config(text=f"Costo de Energía: Q{costo_energia:.2f}")
         self.resultado_diametro_label.config(text=f"Diámetro Mínimo del Cable: {diametro_minimo:.2f} m")
+        self.resultado_tipo_tarifa_label.config(text="Tipo de Tarifa: Baja Tension Simple Social - BTSS")
+
 
 if __name__ == "__main__":
     root = tk.Tk()
