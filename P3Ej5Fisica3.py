@@ -132,6 +132,11 @@ class CalculadoraElectrica:
         corriente_total = 0 
         energia_total = 0
         largo_cable = self.largo_cable_var.get()
+        
+        dispositivo_max_potencia = None
+        dispositivo_max_corriente = None
+        max_potencia = 0
+        max_corriente = 0
 
         for dispositivo in self.dispositivos:
             dispositivo_seleccionado = dispositivo["dispositivo_var"].get()
@@ -141,28 +146,38 @@ class CalculadoraElectrica:
                 voltaje = dispositivo["voltaje_var"].get()
                 horas = dispositivo["horas_var"].get()
 
-                corriente_calculada = potencia / voltaje
-                energia = potencia * horas  # kWh
+                if potencia > max_potencia:
+                    max_potencia = potencia
+                    dispositivo_max_potencia = dispositivo
 
-                corriente_total += corriente_calculada
-                energia_total += energia
+                if corriente > max_corriente:
+                    max_corriente = corriente
+                    dispositivo_max_corriente = dispositivo
 
-        costo_energia = energia_total * 1.386  # Costo de 1.386 Q por kWh
+
+        if max_potencia > 0:
+            dispositivo_max_corriente = max(self.dispositivos, key=lambda d: d["corriente_var"].get())
+            if dispositivo_max_potencia != dispositivo_max_corriente:
+                self.resultado_tipo_tarifa_label.config(text="Error: La potencia y corriente máximas deben pertenecer al mismo dispositivo.")
+                return
+
 
         # Calcular diámetro mínimo del cable (usando la fórmula de la caída de voltaje)
-        resistividad_cobre = 1.68e-8  # ohm*m
-        caida_voltaje_max = 0.05 * voltaje  # 5% de caída de voltaje máximo
-        area_minima = (2 * resistividad_cobre * largo_cable * corriente_total) / caida_voltaje_max
-        diametro_minimo = 2 * (area_minima / math.pi)**0.5
+        resistividad_cobre = 1.72e-8  # ohm*m
+        diametro_minimo = (((max_corriente**2)*(resistividad_cobre)*(largo_cable))/(math.pi/4))**0.5
+
+        energia = max_potencia * horas
+        cobroEnergia = energia * 1.386
 
         # Mostrar resultados
-        self.resultado_corriente_label.config(text=f"Corriente Total: {corriente_total:.2f} A")
-        self.resultado_energia_label.config(text=f"Costo de Energía: Q{costo_energia:.2f}")
-        self.resultado_diametro_label.config(text=f"Diámetro Mínimo del Cable: {diametro_minimo:.2f} m")
+        self.resultado_energia_label.config(text=f"Costo de Energía: Q{cobroEnergia:.2f}")
+        self.resultado_diametro_label.config(text=f"Diámetro Mínimo del Cable: {diametro_minimo:.2f} m ")
         self.resultado_tipo_tarifa_label.config(text="Tipo de Tarifa: Baja Tension Simple Social - BTSS")
 
         # Mostrar la gráfica
         self.graficar()
+
+
 
 if __name__ == "__main__":
     root = tk.Tk()
