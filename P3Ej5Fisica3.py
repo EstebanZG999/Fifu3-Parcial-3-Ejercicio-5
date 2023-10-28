@@ -41,7 +41,7 @@ class CalculadoraElectrica:
         ttk.Label(self.root, text="Potencia (W)").grid(row=2, column=1, padx=5, pady=5)
         ttk.Label(self.root, text="Corriente (A)").grid(row=2, column=2, padx=5, pady=5)
         ttk.Label(self.root, text="Voltaje (V)").grid(row=2, column=3, padx=5, pady=5)
-        ttk.Label(self.root, text="Horas de uso").grid(row=2, column=4, padx=5, pady=5)
+        ttk.Label(self.root, text="Horas de uso al dia por mes").grid(row=2, column=4, padx=5, pady=5)
 
         self.dispositivos = []
         for i in range(num_dispositivos):
@@ -90,6 +90,23 @@ class CalculadoraElectrica:
         self.resultado_diametro_label = ttk.Label(self.root, text="")
         self.resultado_diametro_label.grid(row=num_dispositivos+8, column=0, columnspan=6, pady=10)
 
+    def calcular_calibre_cable(self, diametro_minimo):
+        tabla = [
+            {"calibre": 14, "diametro": 0.163, "imax": 18},
+            {"calibre": 12, "diametro": 0.205, "imax": 25},
+            {"calibre": 10, "diametro": 0.259, "imax": 30},
+            {"calibre": 8,  "diametro": 0.326, "imax": 40},
+            {"calibre": 6,  "diametro": 0.412, "imax": 60},
+            {"calibre": 5,  "diametro": 0.462, "imax": 65},
+            {"calibre": 4,  "diametro": 0.519, "imax": 85}
+        ]
+
+        for fila in tabla:
+            if diametro_minimo <= fila["diametro"]:
+                return fila["calibre"]
+        
+        return "Se necesita un calibre de cable más grande"
+
     def graficar(self):
         fig, ax = plt.subplots()
 
@@ -131,6 +148,7 @@ class CalculadoraElectrica:
     def calcular(self):
         corriente_total = 0 
         energia_total = 0
+        potencia_total = 0
         largo_cable = self.largo_cable_var.get()
         
         dispositivo_max_potencia = None
@@ -145,6 +163,8 @@ class CalculadoraElectrica:
                 corriente = dispositivo["corriente_var"].get()
                 voltaje = dispositivo["voltaje_var"].get()
                 horas = dispositivo["horas_var"].get()
+
+                potencia_total += potencia
 
                 if potencia > max_potencia:
                     max_potencia = potencia
@@ -166,13 +186,18 @@ class CalculadoraElectrica:
         resistividad_cobre = 1.72e-8  # ohm*m
         diametro_minimo = (((max_corriente**2)*(resistividad_cobre)*(largo_cable))/(math.pi/4))**0.5
 
-        energia = max_potencia * horas
-        cobroEnergia = energia * 1.386
+        energia = 565 * horas * 30
+        energiaKw = energia/1000
+        cobroEnergia = energiaKw * 1.386
+
+        # Calcular el calibre del cable necesario
+        calibre_cable = self.calcular_calibre_cable(diametro_minimo)
 
         # Mostrar resultados
         self.resultado_energia_label.config(text=f"Costo de Energía: Q{cobroEnergia:.2f}")
-        self.resultado_diametro_label.config(text=f"Diámetro Mínimo del Cable: {diametro_minimo:.2f} m ")
+        self.resultado_diametro_label.config(text=f"Diámetro Mínimo del Cable: {diametro_minimo:.2f} m \nCalibre de Cable Necesario: {calibre_cable}")
         self.resultado_tipo_tarifa_label.config(text="Tipo de Tarifa: Baja Tension Simple Social - BTSS")
+
 
         # Mostrar la gráfica
         self.graficar()
