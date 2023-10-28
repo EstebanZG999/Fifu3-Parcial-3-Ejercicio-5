@@ -147,8 +147,7 @@ class CalculadoraElectrica:
 
     def calcular(self):
         corriente_total = 0 
-        potencia_total = 0  # Inicializar la potencia total a 0
-        horas_total = 0
+        energia = 0  # Inicializar la energía a 0
         largo_cable = self.largo_cable_var.get()
         
         dispositivo_max_potencia = None
@@ -166,7 +165,7 @@ class CalculadoraElectrica:
 
                 potencia_total += potencia  # Sumar la potencia de este dispositivo a la potencia total
 
-                horas_total += horas
+                energia += potencia * horas  # Calcular la energía para este dispositivo
 
                 if potencia > max_potencia:
                     max_potencia = potencia
@@ -182,18 +181,21 @@ class CalculadoraElectrica:
 
         # Calcular diámetro mínimo del cable (usando la fórmula de la caída de voltaje)
         resistividad_cobre = 1.72e-8  # ohm*m
-        diametro_minimo = (((max_corriente**2)*(resistividad_cobre)*(largo_cable))/(math.pi/4))**0.5
+        diametro_minimo = (((max_corriente**2)*(resistividad_cobre)*(largo_cable))/((math.pi/4)*(max_potencia)))**0.5
 
-        energia = potencia_total * horas_total * 30  # Usar potencia_total en lugar de max_potencia
-        energiaKw = energia / 1000
+        energia_mensual = energia * 30  # Calcular la energía total del mes
+        energiaKw = energia_mensual / 1000
         cobroEnergia = energiaKw * 1.386
 
         # Calcular el calibre del cable necesario
         calibre_cable = self.calcular_calibre_cable(diametro_minimo)
 
-        # Mostrar resultados
-        self.resultado_energia_label.config(text=f"Tarifa por mes: Q{1.386:.2f}")
-        self.resultado_energia_label.config(text=f"Costo de Energía: Q{cobroEnergia:.2f}")
+        mensaje_resultado = (
+        f"Tarifa por mes: Q{1.386:.2f}\n"
+        f"Energía Consumida: {energiaKw:.2f} kW\n"
+        f"Costo de Energía: Q{cobroEnergia:.2f}"
+        )
+        self.resultado_energia_label.config(text=mensaje_resultado)
         self.resultado_diametro_label.config(text=f"Diámetro Mínimo del Cable: {diametro_minimo:.2f} m \nCalibre de Cable Necesario: {calibre_cable}")
         self.resultado_tipo_tarifa_label.config(text="Tipo de Tarifa: Baja Tension Simple Social - BTSS")
 
