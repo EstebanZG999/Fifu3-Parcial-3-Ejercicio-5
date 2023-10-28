@@ -81,14 +81,18 @@ class CalculadoraElectrica:
         self.resultado_tipo_tarifa_label = ttk.Label(self.root, text="")
         self.resultado_tipo_tarifa_label.grid(row=num_dispositivos+5, column=0, columnspan=6, padx=10, pady=10)
 
+        self.tarifa_label = ttk.Label(self.root, text="")
+        self.tarifa_label.grid(row=num_dispositivos+6, column=0, columnspan=6, padx=10, pady=10)
+
+
         self.resultado_corriente_label = ttk.Label(self.root, text="")
-        self.resultado_corriente_label.grid(row=num_dispositivos+6, column=0, columnspan=6, pady=10)
+        self.resultado_corriente_label.grid(row=num_dispositivos+7, column=0, columnspan=6, pady=10)
 
         self.resultado_energia_label = ttk.Label(self.root, text="")
-        self.resultado_energia_label.grid(row=num_dispositivos+7, column=0, columnspan=6, pady=10)
+        self.resultado_energia_label.grid(row=num_dispositivos+8, column=0, columnspan=6, pady=10)
 
         self.resultado_diametro_label = ttk.Label(self.root, text="")
-        self.resultado_diametro_label.grid(row=num_dispositivos+8, column=0, columnspan=6, pady=10)
+        self.resultado_diametro_label.grid(row=num_dispositivos+9, column=0, columnspan=6, pady=10)
 
     def calcular_calibre_cable(self, diametro_minimo):
         tabla = [
@@ -196,12 +200,10 @@ class CalculadoraElectrica:
         self.resultado_energia_label.config(text=f"Costo de Energía: Q{cobroEnergia:.2f}")
         self.resultado_diametro_label.config(text=f"Diámetro Mínimo del Cable: {diametro_minimo:.2f} m \nCalibre de Cable Necesario: {calibre_cable}")
         self.resultado_tipo_tarifa_label.config(text="Tipo de Tarifa: Baja Tension Simple Social - BTSS")
+        self.tarifa_label.config(text="Tarifa: Q1.386 kWh")
 
         # Mostrar la gráfica
         self.graficar()
-
-
-
 
 if __name__ == "__main__":
     root = tk.Tk()
