@@ -167,8 +167,6 @@ class CalculadoraElectrica:
                 voltaje = dispositivo["voltaje_var"].get()
                 horas = dispositivo["horas_var"].get()
 
-                potencia_total += potencia  # Sumar la potencia de este dispositivo a la potencia total
-
                 energia += potencia * horas  # Calcular la energía para este dispositivo
 
                 if potencia > max_potencia:
