@@ -96,15 +96,14 @@ class CalculadoraElectrica:
 
     def calcular_calibre_cable(self, diametro_minimo):
         tabla = [
-            {"calibre": 14, "diametro": 0.163, "imax": 18},
-            {"calibre": 12, "diametro": 0.205, "imax": 25},
-            {"calibre": 10, "diametro": 0.259, "imax": 30},
-            {"calibre": 8,  "diametro": 0.326, "imax": 40},
-            {"calibre": 6,  "diametro": 0.412, "imax": 60},
-            {"calibre": 5,  "diametro": 0.462, "imax": 65},
-            {"calibre": 4,  "diametro": 0.519, "imax": 85}
+            {"calibre": 14, "diametro": 0.00163, "imax": 18},
+            {"calibre": 12, "diametro": 0.00205, "imax": 25},
+            {"calibre": 10, "diametro": 0.00259, "imax": 30},
+            {"calibre": 8,  "diametro": 0.00326, "imax": 40},
+            {"calibre": 6,  "diametro": 0.00412, "imax": 60},
+            {"calibre": 5,  "diametro": 0.00462, "imax": 65},
+            {"calibre": 4,  "diametro": 0.00519, "imax": 85}
         ]
-
         for fila in tabla:
             if diametro_minimo <= fila["diametro"]:
                 return fila["calibre"]
@@ -198,7 +197,7 @@ class CalculadoraElectrica:
         f"Costo de Energía: Q{cobroEnergia:.2f}"
         )
         self.resultado_energia_label.config(text=mensaje_resultado)
-        self.resultado_diametro_label.config(text=f"Diámetro Mínimo del Cable: {diametro_minimo:.2f} m \nCalibre de Cable Necesario: {calibre_cable}")
+        self.resultado_diametro_label.config(text=f"Diámetro Mínimo del Cable: {diametro_minimo:.9f} m \nCalibre de Cable Necesario: {calibre_cable}")
         self.resultado_tipo_tarifa_label.config(text="Tipo de Tarifa: Baja Tension Simple Social - BTSS")
         self.tarifa_label.config(text="Tarifa: Q1.386 kWh")
 
