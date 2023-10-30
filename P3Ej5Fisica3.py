@@ -192,7 +192,6 @@ class CalculadoraElectrica:
         calibre_cable = self.calcular_calibre_cable(diametro_minimo)
 
         mensaje_resultado = (
-        f"Tarifa por mes: Q{1.386:.2f}\n"
         f"Energía Consumida: {energiaKw:.2f} kW\n"
         f"Costo de Energía: Q{cobroEnergia:.2f}"
         )
